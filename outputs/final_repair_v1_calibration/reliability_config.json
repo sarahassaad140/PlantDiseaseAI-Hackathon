@@ -1,0 +1,79 @@
+{
+  "model": {
+    "checkpoint": "checkpoints/convnext_tiny_targeted_repair_v1/best_balanced_accuracy.pth",
+    "architecture": "ConvNeXt-Tiny",
+    "checkpoint_classes": [
+      "Lettuce___Bacterial_leaf_spot",
+      "Lettuce___Fungal_disease",
+      "Lettuce___healthy",
+      "Tomato___Bacterial_spot",
+      "Tomato___Early_blight",
+      "Tomato___Late_blight",
+      "Tomato___Leaf_Mold",
+      "Tomato___Septoria_leaf_spot",
+      "Tomato___Spider_mites Two-spotted_spider_mite",
+      "Tomato___Target_Spot",
+      "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+      "Tomato___Tomato_mosaic_virus",
+      "Tomato___healthy"
+    ],
+    "checkpoint_output_count": 13,
+    "status": "frozen_candidate",
+    "source": "Repair V1 selected after tomato validation comparison and lettuce regression check."
+  },
+  "tomato": {
+    "classes": [
+      "Tomato___Bacterial_spot",
+      "Tomato___Early_blight",
+      "Tomato___Late_blight",
+      "Tomato___Leaf_Mold",
+      "Tomato___Septoria_leaf_spot",
+      "Tomato___Spider_mites Two-spotted_spider_mite",
+      "Tomato___Target_Spot",
+      "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+      "Tomato___Tomato_mosaic_virus",
+      "Tomato___healthy"
+    ],
+    "checkpoint_indices": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12
+    ],
+    "temperature": 0.856387197971344,
+    "confidence_threshold": 0.55,
+    "margin_threshold": 0.0,
+    "entropy_maximum": 0.425,
+    "validation_coverage": 0.7406807131280388,
+    "validation_accepted_accuracy": 0.912472647702407,
+    "validation_accepted_balanced_accuracy": 0.8585352827001872,
+    "validation_error_rejection_rate": 0.6261682242990654
+  },
+  "lettuce": {
+    "classes": [
+      "Lettuce___Bacterial_leaf_spot",
+      "Lettuce___Fungal_disease",
+      "Lettuce___healthy"
+    ],
+    "checkpoint_indices": [
+      0,
+      1,
+      2
+    ],
+    "temperature": 0.9816649556159973,
+    "confidence_threshold": 0.3,
+    "margin_threshold": 0.0,
+    "entropy_maximum": 0.55,
+    "validation_coverage": 0.7777777777777778,
+    "validation_accepted_accuracy": 0.9542857142857143,
+    "validation_accepted_balanced_accuracy": 0.9365079365079364,
+    "validation_error_rejection_rate": 0.7037037037037037
+  },
+  "policy_note": "Reliability values were selected only from development/validation data. External datasets were not used for temperature or threshold fitting."
+}

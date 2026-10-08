@@ -1,0 +1,260 @@
+{
+  "sample": "data/sample_input/sample_leaf.jpg",
+  "sample_split": "YOLO training",
+  "crop_supplied": "tomato",
+  "classifier": {
+    "crop": "tomato",
+    "class_name": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+    "display_name": "Tomato yellow leaf curl virus",
+    "confidence": 0.794314444065094,
+    "margin": 0.692733645439148,
+    "normalized_entropy": 0.36043447256088257,
+    "accepted": true,
+    "confidence_pass": true,
+    "margin_pass": true,
+    "entropy_pass": true,
+    "policy": {
+      "temperature": 0.856387197971344,
+      "confidence_threshold": 0.55,
+      "margin_threshold": 0.0,
+      "entropy_maximum": 0.425,
+      "validation_coverage": 0.7406807131280388,
+      "validation_accepted_accuracy": 0.912472647702407,
+      "validation_accepted_balanced_accuracy": 0.8585352827001872,
+      "validation_error_rejection_rate": 0.6261682242990654
+    },
+    "top_predictions": [
+      {
+        "rank": 1,
+        "class_name": "Tomato___Tomato_Yellow_Leaf_Curl_Virus",
+        "display_name": "Tomato yellow leaf curl virus",
+        "probability": 0.794314444065094
+      },
+      {
+        "rank": 2,
+        "class_name": "Tomato___Tomato_mosaic_virus",
+        "display_name": "Tomato mosaic virus",
+        "probability": 0.10158077627420425
+      },
+      {
+        "rank": 3,
+        "class_name": "Tomato___Leaf_Mold",
+        "display_name": "Tomato leaf mold",
+        "probability": 0.03258392587304115
+      }
+    ],
+    "original_width": 512,
+    "original_height": 512,
+    "model_input_width": 224,
+    "model_input_height": 224,
+    "device": "cuda"
+  },
+  "detector": {
+    "detections": [
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.8470065593719482,
+        "bbox_xyxy": [
+          60.84765625,
+          214.43882751464844,
+          141.7476348876953,
+          363.6429138183594
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.8326839208602905,
+        "bbox_xyxy": [
+          233.7104034423828,
+          273.96435546875,
+          327.5512390136719,
+          426.4283142089844
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.7994044423103333,
+        "bbox_xyxy": [
+          372.21881103515625,
+          372.6012268066406,
+          467.5431213378906,
+          511.98297119140625
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.7978326082229614,
+        "bbox_xyxy": [
+          164.3089599609375,
+          382.0276184082031,
+          269.6729431152344,
+          443.7272644042969
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.789267361164093,
+        "bbox_xyxy": [
+          77.44059753417969,
+          377.04449462890625,
+          156.74905395507812,
+          499.0782775878906
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.7666954398155212,
+        "bbox_xyxy": [
+          278.2507629394531,
+          19.28120231628418,
+          397.0044860839844,
+          109.8812484741211
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.7644917964935303,
+        "bbox_xyxy": [
+          291.7362976074219,
+          333.2972106933594,
+          373.2652893066406,
+          473.4871520996094
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.7627419233322144,
+        "bbox_xyxy": [
+          351.1413269042969,
+          236.94847106933594,
+          461.0612487792969,
+          351.8908386230469
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.7199454307556152,
+        "bbox_xyxy": [
+          273.8057556152344,
+          123.9126205444336,
+          371.6317443847656,
+          242.3052215576172
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.6112467050552368,
+        "bbox_xyxy": [
+          0.13450317084789276,
+          214.05703735351562,
+          87.06802368164062,
+          357.1119689941406
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.5584739446640015,
+        "bbox_xyxy": [
+          30.284650802612305,
+          281.1070251464844,
+          91.84693145751953,
+          390.8809509277344
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.48007315397262573,
+        "bbox_xyxy": [
+          172.73106384277344,
+          20.357349395751953,
+          270.719482421875,
+          153.0498504638672
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.45833662152290344,
+        "bbox_xyxy": [
+          159.81089782714844,
+          246.52798461914062,
+          245.60411071777344,
+          374.0149841308594
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.43587374687194824,
+        "bbox_xyxy": [
+          63.73531723022461,
+          155.2005157470703,
+          129.63986206054688,
+          211.9374237060547
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.30658015608787537,
+        "bbox_xyxy": [
+          0.0,
+          332.109130859375,
+          42.32175827026367,
+          433.6752624511719
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.27769309282302856,
+        "bbox_xyxy": [
+          182.4491729736328,
+          0.0,
+          270.6172790527344,
+          81.6015853881836
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.2724463641643524,
+        "bbox_xyxy": [
+          158.9201202392578,
+          213.9962158203125,
+          225.9384765625,
+          259.1405944824219
+        ]
+      },
+      {
+        "class_id": 8,
+        "class_name": "Yellow Leaf Curl Virus",
+        "confidence": 0.25303322076797485,
+        "bbox_xyxy": [
+          0.251129150390625,
+          215.45962524414062,
+          87.69294738769531,
+          282.5343322753906
+        ]
+      }
+    ],
+    "count": 18,
+    "has_detections": true,
+    "model_sha256": "4c5ea28cd7e175d0e110faedebcce2613959d415c92543772f1354edff99c4c5",
+    "confidence_threshold": 0.25,
+    "image_size": 640
+  },
+  "warning": "Inference demonstration only; no independent performance estimate"
+}

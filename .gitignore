@@ -1,0 +1,15 @@
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+.env
+.venv/
+
+# Keep the large ConvNeXt checkpoint out of Git
+/checkpoints/convnext_tiny_targeted_repair_v1/*.pth
+
+# Ignore other local model checkpoints
+*.pth
+*.pt
+
+# Include the frozen YOLO checkpoint
+!/outputs/yolo_detection/FINAL_YOLO_RELEASE/yolo11n_detection_final.pt

@@ -1,0 +1,26 @@
+YOLO11n FINAL DETECTOR
+=====================
+
+Dataset: YOLODetectionCleanV5
+Classes: 9
+Train images: 7136
+Validation images: 1377
+Test images: 1516
+
+Selected checkpoint: best.pt
+Best validation epoch: 67
+Validation Precision: 0.78234
+Validation Recall: 0.69680
+Validation mAP50: 0.79257
+Validation mAP50-95: 0.65012
+
+FINAL FROZEN TEST
+Test instances: 5282
+Test Precision: 0.893
+Test Recall: 0.856
+Test mAP50: 0.925
+Test mAP50-95: 0.836
+
+Model SHA256: 4c5ea28cd7e175d0e110faedebcce2613959d415c92543772f1354edff99c4c5
+
+IMPORTANT: Test results are final evaluation only and must not be used for model selection or tuning.
