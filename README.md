@@ -363,7 +363,7 @@ These checks establish that the demonstration executed successfully in the teste
 
 **Team members and roles:**
 
-- **Sarah Assaad — Lead AI Researcher & Machine Learning Architect** —  Lead AI Researcher & Machine Learning Architect: Led the end-to-end AI development, including multi-domain deep learning, model optimization, robustness evaluation, reliability-aware prediction, explainable AI, YOLO integration, and reproducible deployment
+- **Sarah Assaad — Lead AI Researcher & Machine Learning Architect** —  Led the end-to-end AI development, including multi-domain deep learning, model optimization, robustness evaluation, reliability-aware prediction, explainable AI, YOLO integration, and reproducible deployment
 - **Pr.Mohamad Khalil  — Professor, Lebanese University; Director, AZM Research Center for Biotechnology** — Academic and biotechnology expertise, affiliated with the École Doctorale des Sciences et Technologies and Université de Technologie de Compiègne.
 - **Dr. Fatima Yahya  — PhD, Senior Researcher in Chemistry and Environmental Science, Lebanese University** — Scientific expertise in chemistry, environmental research, and greenhouse-related applications.
 
