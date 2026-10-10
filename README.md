@@ -1,5 +1,11 @@
 # PlantDiseaseAI — Reliability-Aware Plant Disease Recognition
 
+**AquaFoodMind | Lebanon | Precision Agriculture & Crop Intelligence**
+
+**Hackathon project:** *AI in Agriculture: Smart Aquaponics and Hydroponics — AI, IoT, and Data-Driven Monitoring for Sustainable Crop Production*
+
+**Repository focus:** PlantDiseaseAI, the implemented AI plant-health screening and reliability-aware computer-vision component of the broader AquaFoodMind proposal.
+
 **Hackathon proof of concept | Frozen model inference | Reproducible Jupyter demonstration**
 
 PlantDiseaseAI is a research-oriented computer-vision prototype for plant disease recognition under agricultural domain shift. It combines a **13-class ConvNeXt-Tiny image classifier** with **independent YOLO11n tomato-leaf detection**, calibrated confidence and reliability-aware **ACCEPT / VERIFY** decisions, and optional Grad-CAM++ attention visualization.
@@ -213,16 +219,25 @@ The broader project vision is to support sustainable tomato production in contro
 
 **Scope boundary:** The present GitHub proof of concept implements the **computer-vision portion**. Integration with sensors or control hardware is a future engineering direction, not a demonstrated result in this repository.
 
-## 10. Team and acknowledgments
+## 10. Team AquaFoodMind — Lebanon
 
-This repository contains the hackathon's computer-vision proof of concept and reproducibility materials.
+- **Sarah Assaad** — Lead AI/ML researcher and developer; plant-disease modeling, domain-shift evaluation, reliability-aware inference, model integration, GitHub implementation, and reproducibility.
+- **Prof. Mohamad Khalil** — Professor at the Lebanese University and Director of the AZM Research Center for Biotechnology; academic and biotechnology research expertise. Affiliated with the École Doctorale des Sciences et Technologies, Université Libanaise, and Université de Technologie de Compiègne.
+- **Dr. Fatima Yahya** — PhD; senior researcher in chemistry and environment, Lebanese University; environmental and interdisciplinary research expertise.
 
-- **AI / data science / GitHub demonstration:** PlantDiseaseAI model integration, frozen inference, notebook, and reproducibility packaging.
-- **Hydroponics / smart-greenhouse domain expertise and presentation:** Academic collaborators and research team.
+**Hackathon theme:** Precision Agriculture & Crop Intelligence. **Country:** Lebanon. **Team:** AquaFoodMind.
 
-**Before submission:** Add the full names, institutional affiliations, and specific contributions of all team members **with their approval**. Do not attribute model training, datasets, or software contributions to anyone without confirmation.
+The team's wider concept concerns smart aquaponics and hydroponics, AI, IoT, and data-driven monitoring for sustainable crop production. The code in this repository demonstrates the **plant-disease computer-vision proof of concept**, rather than the full proposed greenhouse monitoring system.
 
-## 11. Research and licensing status
+## 11. Hackathon submission alignment
+
+The accompanying presentation PDF should contain, in order: the project title, team, theme, and country; the problem and affected users; the grower/technician use case; data provenance and the fact that **RGB imagery is used, not hyperspectral data**; a diagram of the **actual two-branch inference workflow**; readable screenshots of **real notebook outputs**; validation results and limitations; expected impact; and practical next steps for incubation.
+
+**What is demonstrable today:** frozen ConvNeXt-Tiny classification, ACCEPT / VERIFY decisions, independent YOLO11n detection, notebook execution, a checkpoint downloader with SHA-256 verification, and saved sample outputs. **Future work:** additional independent field validation, sensor-data integration, and supervised greenhouse pilot testing. These future steps must not be presented as completed functionality.
+
+**Submission package:** public repository URL, runnable notebook, pinned dependencies, a committed sample and outputs, release-hosted classifier checkpoint, and a separately exported presentation PDF submitted through the official form. The PDF and form are **not contained in this repository unless separately added**.
+
+## 12. Research and licensing status
 
 **Status:** Research proof of concept; frozen model inference; not a production-ready agricultural diagnostic product.
 
