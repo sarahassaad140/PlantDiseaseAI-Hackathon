@@ -23,6 +23,12 @@ This proof of concept aims to:
 - provide a small, reproducible demonstration with downloadable frozen weights and example outputs;
 - support **human review**, especially when model evidence is uncertain.
 
+## Intended user and business decision
+
+The intended end users are **greenhouse growers, crop-monitoring technicians, and agricultural advisors** who currently rely on visual scouting and manual expert review. In a future supervised greenhouse workflow, a user could submit an RGB leaf photograph, review a disease-category prediction and independent bounding-box visualization, and decide **whether to inspect the plant more closely, request expert verification, or prioritize monitoring**. The current prototype does not prescribe treatments or control equipment.
+
+The proposed value is **triage and documentation**, not a verified increase in yield, reduced pesticide use, or commercial return on investment. Satellite imagery is not the right input for the current leaf-level notebook because its demonstrated task uses close-up RGB photographs; future satellite or hyperspectral integration is outside the implemented scope.
+
 ## 2. What the repository actually implements
 
 | Component | Implementation | Scope |
@@ -133,7 +139,7 @@ notebooks/01_plant_disease_demo.ipynb
 
 Select a kernel using the environment where the dependencies are installed, then choose **Restart Kernel and Run All Cells**.
 
-The notebook uses the included sample image and writes demonstration artifacts to `results/`. It should be run from the repository root so that relative paths resolve correctly.
+The notebook uses the included sample image and writes demonstration artifacts to `results/`. It should be run from the repository root so that relative paths resolve correctly. **No hardware-independent runtime estimate is claimed**; execution time depends on device, installed PyTorch stack, and first-time checkpoint download. No API key is required for the local sample demonstration.
 
 ## 5. Example input and output
 
@@ -155,7 +161,7 @@ Generated examples:
 
 ![Example YOLO detection output](results/example_output.jpg)
 
-These results are **illustrative single-image outputs**, not evidence of generalization accuracy or clinical/agronomic confirmation. ACCEPT means the frozen reliability checks were passed; it does **not** mean a disease diagnosis is guaranteed to be correct.
+The 18 YOLO boxes may overlap substantially; they are **model-generated regions, not 18 independently confirmed lesions**. These results are **illustrative single-image outputs**, not evidence of generalization accuracy or agronomic confirmation. ACCEPT means the frozen reliability checks were passed; it does **not** mean a disease diagnosis is guaranteed to be correct.
 
 ## 6. Evaluation evidence and interpretation
 
@@ -192,15 +198,33 @@ The frozen YOLO evaluation uses the YOLODetectionCleanV5 dataset, with **7,136 t
 
 See [`results/YOLO_FINAL_METRICS.txt`](results/YOLO_FINAL_METRICS.txt) for the recorded metrics. The difference between validation and test performance should not be interpreted as a guarantee of field performance.
 
-**Metric reproducibility:** This repository provides a **frozen inference demonstration**. Reproducing the full evaluation metrics requires the relevant evaluation datasets, split manifests, and evaluation protocol; running the sample notebook alone does **not** reproduce those aggregate scores.
+**Metric reproducibility:** The reproducible headline **demonstration result** is the sample image's classification, reliability decision, and detection visualization. This repository provides a **frozen inference demonstration**. Reproducing the full evaluation metrics requires the relevant evaluation datasets, split manifests, and evaluation protocol; running the sample notebook alone does **not** reproduce those aggregate scores.
 
-## 7. Data provenance and redistribution
+## 7. Dataset sources, provenance, dates and licensing
 
-The project draws on multiple plant-image domains and research datasets during development, including controlled images and more challenging field-style imagery. The YOLO model uses a separately prepared tomato detection dataset.
+**Input modality:** Standard RGB plant photographs. **No satellite, multispectral, or hyperspectral imagery is used in this executable proof of concept.** No acquisition-date range is claimed for the full assembled dataset because the individual image-capture dates were not consistently available in the supplied research records.
 
-The committed `data/sample_input/sample_leaf.jpg` is a demonstration image originating from the YOLO training split. **Its exact source license and permission for public redistribution must be verified by the team.** If redistribution is not permitted, replace the sample with a properly licensed or team-owned image and regenerate the demonstration outputs.
+The source names below refer to **historical research and model-development collections**, not datasets bundled with this inference-only repository. Internal collection names such as `PlantDocFineTune` and `FinalMultiDomainDataset` are project-specific prepared subsets, **not separate original publishers**.
 
-The full training datasets are **not** distributed in this repository. Dataset access and usage remain subject to the original providers' terms. The presence of a sample or model checkpoint does not grant rights to redistribute third-party datasets.
+| Dataset / original source | Role in research | Source / attribution | Publication or acquisition date | License / reuse status |
+| --- | --- | --- | --- | --- |
+| PlantVillage-derived tomato images (`CombinedDatasetClean`) | Controlled-domain baseline and early classifier development | [PlantVillage Kaggle distribution](https://www.kaggle.com/datasets/mohitsingh1804/plantvillage) | Image acquisition dates not documented here | Check the license of the specific distributed copy before reuse |
+| Lettuce Plant Disease Dataset | Three lettuce classes and held-out lettuce evaluation | [Lettuce dataset on Kaggle](https://www.kaggle.com/datasets/santoshshaha/lettuce-plant-disease-dataset) | Image acquisition dates not documented here | Source-specific terms not independently verified |
+| PlantDoc (`PlantDocFineTune` / `PlantDocExternalTest`) | Historical supervised adaptation; separate supplementary tomato external audit | [PlantDoc Kaggle distribution](https://www.kaggle.com/datasets/yusufmurtaza01/plantdoc-object-detection-dataset) | Image acquisition dates not documented here | Source-specific terms not independently verified |
+| Pakistan Tomato Dataset | Additional tomato acquisition domain for multi-domain development | Source named in research documentation; canonical download URL not established in this repository | Image acquisition dates not documented here | Not independently verified |
+| Luis Olazo Tomato Dataset | Multi-domain expansion after duplicate and overlap screening | Source named in research documentation; canonical download URL not established in this repository | Image acquisition dates not documented here | Not independently verified |
+| Tomato-Leaf-Disease-63, by Bryan | YOLO-annotated tomato source; compatible disease-region crops used during classifier development; source family of the demonstration image | [Original Roboflow Universe dataset v63](https://universe.roboflow.com/bryan-b56jm/tomato-leaf-disease-ssoha/dataset/63); [alternative Kaggle distribution](https://www.kaggle.com/datasets/kpoviesistphane/tomato-leaf-disease-detection) | **Version 63 generated 20 June 2023**; individual capture dates not specified | **CC BY 4.0** on the original Roboflow dataset; credit Bryan and link to source/license |
+| 2026 field-oriented tomato collection | Later field-diverse robustness development, not independent final-test evidence | Source described in research records; public canonical URL not supplied | Collection identified as 2026; image-level acquisition dates not verified | Not independently verified |
+| Mendeley Tomato Leaf Dataset 2025 | Additional field-diverse robustness development | Source described in research records; exact Mendeley record/DOI not supplied | Collection identified as 2025; image-level acquisition dates not verified | Not independently verified |
+| `TOMATO_LEAF_DATASET_1` | Additional field-diverse robustness development | Internal source identifier; canonical publisher URL not supplied | Not documented | Not independently verified |
+
+**Source and split integrity.** The principal `FinalMultiDomainDataset` contains **58,075 images**: 50,145 training, 5,468 validation, and 2,462 historical internal-test records. The separate tomato YOLO detection dataset contains **10,029 images**: 7,136 training, 1,377 validation, and 1,516 reserved test. These are **different datasets and evaluation tasks**, not additive counts for one training corpus.
+
+The research used class-label harmonization, integrity and overlap screening, and explicit distinctions between development, historical internal evaluation, held-out evaluation, supplementary external auditing, and stress testing. For example, `PlantDocFineTune` influenced historical model development; therefore, `PlantDocExternalTest` is described conservatively as a **supplementary external audit**. The frozen 70-image stress audit was not used to train, calibrate, tune thresholds, or select the model.
+
+**Demonstration sample and attribution.** `data/sample_input/sample_leaf.jpg` is a **training-split example**, not an independent test image. It is attributed to the Tomato-Leaf-Disease-63 source family by Bryan, [Roboflow Universe v63](https://universe.roboflow.com/bryan-b56jm/tomato-leaf-disease-ssoha/dataset/63), **CC BY 4.0** ([license text](https://creativecommons.org/licenses/by/4.0/)). The example is provided for demonstration and source attribution; no accuracy estimate is inferred from this image. If its exact image provenance differs from that source, the attribution must be corrected.
+
+**Redistribution boundary.** The full third-party training datasets, evaluation images, and research split manifests are **not included** in this repository. The verified CC BY 4.0 statement applies to the original Bryan/Roboflow v63 source only; it must **not** be generalized to PlantDoc, PlantVillage distributions, other Kaggle collections, or the project's code and checkpoints. Missing source-specific dates, canonical links, and license details are explicitly identified as **unverified**, not invented.
 
 ## 8. Limitations and responsible use
 
