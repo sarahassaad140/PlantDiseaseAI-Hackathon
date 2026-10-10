@@ -1,60 +1,36 @@
 # PlantDiseaseAI — Reliability-Aware Plant Disease Recognition
 
-**Status: Reproducible frozen-inference research prototype — clean-clone and CPU execution verified.**
+**Hackathon proof of concept | Frozen model inference | Reproducible Jupyter demonstration**
 
-PlantDiseaseAI demonstrates reliability-aware plant disease recognition using a frozen ConvNeXt-Tiny image classifier, a crop-specific ACCEPT/VERIFY policy, and an independent YOLO11n tomato disease detector.
+PlantDiseaseAI is a research-oriented computer-vision prototype for plant disease recognition under agricultural domain shift. It combines a **13-class ConvNeXt-Tiny image classifier** with **independent YOLO11n tomato-leaf detection**, calibrated confidence and reliability-aware **ACCEPT / VERIFY** decisions, and optional Grad-CAM++ attention visualization.
 
-The repository provides a reproducible inference demonstration for a greenhouse and hydroponic decision-support use case. It does not retrain models, automatically identify crop species, or provide autonomous plant disease diagnosis.
+The intended application is **human-assisted crop monitoring**, including tomato production in greenhouse and hydroponic settings. This repository demonstrates **image-based inference**, not a deployed IoT system, automated irrigation controller, autonomous plant diagnosis, or live greenhouse integration.
 
-**Reproducibility verification:** On October 8, 2026, the repository was independently cloned and the notebook successfully executed using a newly created Python 3.10 environment on Windows with CPU-only PyTorch. Both model checkpoints passed SHA-256 verification, and the notebook generated its expected outputs without errors.
+## 1. Problem and objective
 
-## 1. Problem and use case
+Models evaluated on controlled leaf photographs may perform much worse on field-style images because of changes in lighting, backgrounds, camera conditions, leaf appearance, and disease presentation. High confidence alone is not sufficient evidence of a reliable prediction.
 
-Plant disease symptoms can be difficult to assess consistently from visual observations, particularly when images differ in lighting, background, acquisition conditions, and symptom presentation.
+This proof of concept aims to:
+- classify tomato and lettuce leaf images using a frozen vision model;
+- expose confidence and a conservative **ACCEPT / VERIFY** reliability decision;
+- detect and visualize tomato-leaf disease-related regions using a separate YOLO model;
+- provide a small, reproducible demonstration with downloadable frozen weights and example outputs;
+- support **human review**, especially when model evidence is uncertain.
 
-PlantDiseaseAI explores a human-in-the-loop approach that combines:
+## 2. What the repository actually implements
 
-- **Image-level classification:** ConvNeXt-Tiny predicts a disease or healthy class.
-- **Reliability-aware selective prediction:** A frozen, crop-specific policy produces an ACCEPT or VERIFY decision.
-- **Supporting localization:** YOLO11n independently predicts disease-associated regions in tomato images.
-- **Human review:** Predictions and uncertainty information are intended to assist, not replace, agricultural expertise.
+| Component | Implementation | Scope |
+| --- | --- | --- |
+| Image classification | ConvNeXt-Tiny | 13 classes: 10 tomato and 3 lettuce |
+| Reliability decision | Crop-specific temperature scaling; confidence, prediction margin, and normalized entropy checks | ACCEPT or VERIFY; frozen thresholds |
+| Tomato detection | YOLO11n | 9 tomato detection categories; bounding boxes |
+| Visual explanation | Grad-CAM++ | Qualitative attention evidence, **not** lesion segmentation |
+| Demo | Jupyter notebook | Single-image inference and saved outputs |
+| Greenhouse context | Broader research/application motivation | **No live sensor connection or actuator control in this repository** |
 
-The broader research project also explores explainability and rule-based greenhouse environmental context. The notebook in this repository focuses on frozen visual inference; environmental monitoring and forecasting are not implemented in this demonstration.
+**Important architectural distinction:** YOLO11n and ConvNeXt-Tiny run as **independent inference branches on the input image**. YOLO detections are not fed as crops to the classifier and do not override the classifier's ACCEPT / VERIFY decision. Their label spaces are different and should not be treated as interchangeable.
 
-## 2. System architecture
-
-### ConvNeXt-Tiny classification
-
-The frozen ConvNeXt-Tiny classifier supports **13 classes**, comprising 10 tomato classes and 3 lettuce classes.
-
-The user must supply the crop identity, either `tomato` or `lettuce`. Crop recognition is not automatic.
-
-The classifier produces a predicted class and calibrated confidence information. Its reliability policy uses crop-specific calibration and uncertainty criteria, including confidence, prediction margin, and normalized entropy, to determine whether a prediction is:
-
-- **ACCEPT:** The prediction meets the frozen reliability criteria.
-- **VERIFY:** The prediction should receive additional human review.
-
-An ACCEPT decision does **not** guarantee that a prediction is correct.
-
-### YOLO11n supporting detection
-
-A separate frozen YOLO11n detector supports nine tomato disease/condition categories:
-
-1. Early Blight
-2. Healthy
-3. Late Blight
-4. Leaf Miner
-5. Leaf Mold
-6. Mosaic Virus
-7. Septoria
-8. Spider Mites
-9. Yellow Leaf Curl Virus
-
-YOLO runs independently on the same input image. Its bounding boxes do not feed into the ConvNeXt classifier and do not override the classifier's ACCEPT/VERIFY decision.
-
-The detector's nine-class label space is different from the classifier's 13-class label space. Its predicted boxes are supporting visual evidence, not verified lesions or independently confirmed disease regions.
-
-## 3. Repository structure
+## 3. Repository contents
 
 ```text
 PlantDiseaseAI-Hackathon/
@@ -62,19 +38,15 @@ PlantDiseaseAI-Hackathon/
 ├── requirements.txt
 ├── download_checkpoint.py
 ├── .gitignore
-├── checkpoints/
-│   └── convnext_tiny_targeted_repair_v1/
-│       └── best_balanced_accuracy.pth
-│          (downloaded separately; not tracked by Git)
-├── data/
-│   └── sample_input/
-│       └── sample_leaf.jpg
+├── notebooks/
+│   └── 01_plant_disease_demo.ipynb
 ├── deployment/
 │   ├── __init__.py
 │   ├── inference_engine_final_repair_v1.py
 │   └── yolo_detector_final.py
-├── notebooks/
-│   └── 01_plant_disease_demo.ipynb
+├── data/
+│   └── sample_input/
+│       └── sample_leaf.jpg
 ├── outputs/
 │   ├── final_repair_v1_calibration/
 │   │   └── reliability_config.json
@@ -82,313 +54,180 @@ PlantDiseaseAI-Hackathon/
 │       └── FINAL_YOLO_RELEASE/
 │           └── yolo11n_detection_final.pt
 └── results/
-    ├── YOLO_FINAL_METRICS.txt
+    ├── example_output.jpg
     ├── example_prediction.json
-    └── example_output.jpg
+    └── YOLO_FINAL_METRICS.txt
 ```
 
-The classifier checkpoint is downloaded automatically using the provided script. The smaller YOLO checkpoint is included in the repository.
+The larger ConvNeXt-Tiny checkpoint is distributed through a **GitHub Release**, not tracked directly in Git.
 
-## 4. Installation and reproducibility
+## 4. Quick start
 
 ### Prerequisites
 
-- Python 3.10
-- Git
-- Internet connection for initial dependency and classifier-checkpoint downloads
-- Jupyter Notebook or JupyterLab
-- Anaconda or Miniconda recommended for environment isolation
+- Python **3.10** is recommended.
+- An internet connection is needed once to install dependencies and download the ConvNeXt checkpoint.
+- A CUDA-capable GPU can accelerate inference; hardware compatibility and CPU behavior depend on the installed PyTorch stack.
+- Use a clean virtual or conda environment where possible.
 
-An NVIDIA GPU is **not required** for the demonstration. Successful execution has been verified with CPU-only PyTorch on Windows.
-
-### Step 1 — Clone the repository
+### Clone the repository
 
 ```bash
 git clone https://github.com/sarahassaad140/PlantDiseaseAI-Hackathon.git
 cd PlantDiseaseAI-Hackathon
 ```
 
-### Step 2 — Create an isolated Python environment
-
-Using Anaconda Prompt:
-
-```bash
-conda create -n plant_ai_hackathon python=3.10 -y
-conda activate plant_ai_hackathon
-```
-
-### Step 3 — Install dependencies
+### Install dependencies
 
 ```bash
 python -m pip install -r requirements.txt
-python -m pip check
 ```
 
-The published dependency versions were successfully installed in a new Python 3.10.22 environment on Windows. The installation passed `pip check` with no broken requirements.
-
-The clean test used PyTorch `2.13.0+cpu` and Torchvision `0.28.0+cpu`. CUDA-enabled environments may require platform-specific PyTorch installation choices.
-
-### Step 4 — Register the Jupyter kernel
+The `requirements.txt` file pins the primary runtime packages. If your installation reports a missing `timm` or `pytorch_grad_cam` import, install the corresponding pinned packages and add them to `requirements.txt` before considering the environment independently reproducible:
 
 ```bash
-python -m ipykernel install --user --name plant_ai_hackathon --display-name "Python (PlantDiseaseAI Hackathon)"
+python -m pip install timm==1.0.28 grad-cam==1.5.5
 ```
 
-If Jupyter Notebook is not already installed, install it in an appropriate environment:
+> **Reproducibility note:** The inference notebook was exercised in the project's existing `plant_ai` environment and its GitHub fresh clone. A completely independent clean-environment dependency installation has not been established here; therefore, cross-platform reproducibility is not guaranteed.
 
-```bash
-python -m pip install notebook
-```
-
-Then launch Jupyter from the repository root:
-
-```bash
-jupyter notebook
-```
-
-### Step 5 — Download the frozen classifier checkpoint
-
-Run from the repository root:
+### Download and verify the frozen classifier checkpoint
 
 ```bash
 python download_checkpoint.py
 ```
 
-The script downloads the frozen ConvNeXt-Tiny checkpoint from the [v1.0.0-hackathon GitHub Release](https://github.com/sarahassaad140/PlantDiseaseAI-Hackathon/releases/tag/v1.0.0-hackathon), places it in the expected directory, and verifies its SHA-256 checksum.
-
-If a valid checkpoint already exists, the script recognizes it and avoids downloading it again.
-
-**Frozen classifier SHA-256:**
+This downloads the checkpoint to:
 
 ```text
-b4f1ecf003f7710de4454f33babe841da9a302436a74a8a1b19590a68b3ea602
+checkpoints/convnext_tiny_targeted_repair_v1/best_balanced_accuracy.pth
 ```
 
-**Frozen YOLO11n SHA-256:**
+The downloader verifies the file using SHA-256 and safely reuses an already verified copy.
+
+- Release: [v1.0.0-hackathon](https://github.com/sarahassaad140/PlantDiseaseAI-Hackathon/releases/tag/v1.0.0-hackathon)
+- ConvNeXt-Tiny checkpoint SHA-256:
+  `b4f1ecf003f7710de4454f33babe841da9a302436a74a8a1b19590a68b3ea602`
+- YOLO11n checkpoint SHA-256:
+  `4c5ea28cd7e175d0e110faedebcce2613959d415c92543772f1354edff99c4c5`
+
+### Run the notebook
+
+Launch Jupyter from the **repository root**:
+
+```bash
+jupyter notebook
+```
+
+Open:
 
 ```text
-4c5ea28cd7e175d0e110faedebcce2613959d415c92543772f1354edff99c4c5
+notebooks/01_plant_disease_demo.ipynb
 ```
 
-Both checkpoint hashes are checked by the notebook before inference. A mismatched checkpoint must not be silently substituted.
+Select a kernel using the environment where the dependencies are installed, then choose **Restart Kernel and Run All Cells**.
 
-### Step 6 — Execute the notebook
+The notebook uses the included sample image and writes demonstration artifacts to `results/`. It should be run from the repository root so that relative paths resolve correctly.
 
-In Jupyter, open:
+## 5. Example input and output
 
-`notebooks/01_plant_disease_demo.ipynb`
+**Input:** `data/sample_input/sample_leaf.jpg`
 
-Select the kernel **Python (PlantDiseaseAI Hackathon)**, then choose **Restart Kernel and Run All Cells**.
+In the documented local demonstration, the classifier returned:
 
-The notebook:
+| Field | Example |
+| --- | --- |
+| Crop | Tomato |
+| Predicted class | Tomato yellow leaf curl virus |
+| Calibrated confidence | Approximately 0.7943 |
+| Reliability decision | ACCEPT |
+| YOLO detections | 18 boxes labeled Yellow Leaf Curl Virus |
 
-1. Loads and displays the example tomato image.
-2. Verifies the frozen classifier and YOLO checkpoint hashes.
-3. Runs ConvNeXt-Tiny classification and the reliability gate.
-4. Runs independent YOLO11n localization.
-5. Displays the annotated image.
-6. Saves reproducible example outputs.
+Generated examples:
+- [`results/example_prediction.json`](results/example_prediction.json) — machine-readable inference output
+- [`results/example_output.jpg`](results/example_output.jpg) — annotated detection visualization
 
-The notebook supports execution when launched from the repository root or its `notebooks/` directory.
+![Example YOLO detection output](results/example_output.jpg)
 
-## 5. Demonstration input and expected outputs
+These results are **illustrative single-image outputs**, not evidence of generalization accuracy or clinical/agronomic confirmation. ACCEPT means the frozen reliability checks were passed; it does **not** mean a disease diagnosis is guaranteed to be correct.
 
-### Sample input
+## 6. Evaluation evidence and interpretation
 
-`data/sample_input/sample_leaf.jpg`
+### ConvNeXt-Tiny classification
 
-The included image comes from a **YOLO training split**. It is used to demonstrate the inference pipeline and must not be interpreted as a held-out evaluation example.
+The research development process included controlled-domain training, multi-domain learning, targeted class-level refinement, external auditing, and a separate field-style stress test.
 
-The demonstration supplies `tomato` as the crop identity.
+| Evaluation setting | Accuracy | Notes |
+| --- | ---: | --- |
+| Historical multi-domain internal test | 98.09% | Internal benchmark; **not** real-world accuracy |
+| Frozen tomato supplementary external audit | 71.20% | Balanced accuracy 68.54%; macro F1 67.60% |
+| Held-out lettuce evaluation | 91.15% | Balanced accuracy 91.11%; macro F1 91.09% |
+| Separate 70-image field-style stress test | 31.43% | 7 classes; substantial domain-shift limitation |
 
-### Example classification output
+The tomato external audit is described as **supplementary**, because PlantDoc-related data influenced earlier model adaptation. The separate 70-image stress set must remain excluded from training, calibration, and threshold selection.
 
-```text
-Class: Tomato yellow leaf curl virus
-Confidence: approximately 0.794
-Reliability decision: ACCEPT
-```
+### Reliability-aware selective prediction
 
-### Example detection output
+| Crop | Overall accuracy | Accuracy on ACCEPT predictions | ACCEPT coverage |
+| --- | ---: | ---: | ---: |
+| Tomato | 71.20% | 84.68% | 58.12% |
+| Lettuce | 91.15% | 94.62% | 82.30% |
 
-```text
-YOLO detections: 18
-Predicted category: Yellow Leaf Curl Virus
-```
+Accepted-subset accuracy applies **only to the subset the system accepted**; the remainder requires verification. Reliability thresholds were frozen and must not be retuned on final test data.
 
-The YOLO detector may produce overlapping boxes and labels. These are retained as model predictions rather than treated as independently verified lesions.
+### YOLO11n tomato detection
 
-The results are illustrative. Small numerical or visualization differences may occur across hardware and software environments.
+The frozen YOLO evaluation uses the YOLODetectionCleanV5 dataset, with **7,136 training**, **1,377 validation**, and **1,516 reserved test images**.
 
-### Generated files
+| Split | Precision | Recall | mAP@0.50 | mAP@0.50:0.95 |
+| --- | ---: | ---: | ---: | ---: |
+| Validation | 0.782 | 0.697 | 0.793 | 0.650 |
+| Reserved test | 0.893 | 0.856 | 0.925 | 0.836 |
 
-The notebook regenerates:
+See [`results/YOLO_FINAL_METRICS.txt`](results/YOLO_FINAL_METRICS.txt) for the recorded metrics. The difference between validation and test performance should not be interpreted as a guarantee of field performance.
 
-- `results/example_prediction.json` — structured inference results and metadata.
-- `results/example_output.jpg` — annotated YOLO detection output.
+**Metric reproducibility:** This repository provides a **frozen inference demonstration**. Reproducing the full evaluation metrics requires the relevant evaluation datasets, split manifests, and evaluation protocol; running the sample notebook alone does **not** reproduce those aggregate scores.
 
-Example output files are included so that users can inspect the expected artifact formats before running the notebook.
+## 7. Data provenance and redistribution
 
-A successful single-image demonstration does **not** reproduce the research evaluation metrics.
+The project draws on multiple plant-image domains and research datasets during development, including controlled images and more challenging field-style imagery. The YOLO model uses a separately prepared tomato detection dataset.
 
-## 6. Dataset provenance, licensing, and attribution
+The committed `data/sample_input/sample_leaf.jpg` is a demonstration image originating from the YOLO training split. **Its exact source license and permission for public redistribution must be verified by the team.** If redistribution is not permitted, replace the sample with a properly licensed or team-owned image and regenerate the demonstration outputs.
 
-### Demonstration image source
+The full training datasets are **not** distributed in this repository. Dataset access and usage remain subject to the original providers' terms. The presence of a sample or model checkpoint does not grant rights to redistribute third-party datasets.
 
-The sample image was selected from the `YOLODetectionCleanV5` training split. The original detection dataset is documented as:
+## 8. Limitations and responsible use
 
-**Tomato Leaf Disease — Roboflow Universe, version 63**
+- **Agricultural domain shift remains a major unresolved limitation.** Performance on a small, challenging field-style stress set was substantially lower than on internal data.
+- Disease symptoms can resemble nutrient deficiencies, environmental stress, pest damage, and other disorders.
+- YOLO bounding boxes are detection outputs, not pixel-accurate lesion segmentation.
+- Grad-CAM++ shows qualitative attention patterns, not causal explanations or verified disease boundaries.
+- ACCEPT / VERIFY is a selective-review mechanism, not a safety certification.
+- Greenhouse environmental disease-pressure rules, where discussed in the broader research, are **contextual decision support**, not disease forecasting and not a replacement for visual reliability checks.
+- This repository does **not** implement live IoT sensing, hydroponic dosing, irrigation actuation, or an autonomous greenhouse control loop.
+- Predictions should be reviewed by qualified agricultural personnel before interventions.
 
-- **Workspace:** `bryan-b56jm`
-- **Project:** `tomato-leaf-disease-ssoha`
-- **Version:** 63
-- **License recorded in source `data.yaml`:** CC BY 4.0
+## 9. Broader hydroponics and greenhouse context
 
-Original dataset:
+The broader project vision is to support sustainable tomato production in controlled agriculture by combining image-based plant health assessment with environmental monitoring and human decision-making. Water management, nutrient monitoring, energy use, and sensor acquisition are important greenhouse considerations.
 
-https://universe.roboflow.com/bryan-b56jm/tomato-leaf-disease-ssoha/dataset/63
+**Scope boundary:** The present GitHub proof of concept implements the **computer-vision portion**. Integration with sensors or control hardware is a future engineering direction, not a demonstrated result in this repository.
 
-A corresponding dataset is also available on Kaggle:
+## 10. Team and acknowledgments
 
-https://www.kaggle.com/datasets/kpoviesistphane/tomato-leaf-disease-detection
+This repository contains the hackathon's computer-vision proof of concept and reproducibility materials.
 
-The Kaggle listing displays the license as **Unknown**, whereas the dataset's `data.yaml` records **CC BY 4.0** for the Roboflow source. The Roboflow metadata provides the more specific source attribution, but any additional third-party image rights or restrictions must still be respected.
+- **AI / data science / GitHub demonstration:** PlantDiseaseAI model integration, frozen inference, notebook, and reproducibility packaging.
+- **Hydroponics / smart-greenhouse domain expertise and presentation:** Academic collaborators and research team.
 
-### Attribution
+**Before submission:** Add the full names, institutional affiliations, and specific contributions of all team members **with their approval**. Do not attribute model training, datasets, or software contributions to anyone without confirmation.
 
-The demonstration image is attributed to the **Tomato Leaf Disease** dataset, Roboflow Universe project `tomato-leaf-disease-ssoha`, workspace `bryan-b56jm`, version 63, with a CC BY 4.0 license recorded in its dataset metadata.
+## 11. Research and licensing status
 
-The image is redistributed here as an inference example. The repository also contains a derivative visualization with predicted YOLO bounding boxes and labels.
+**Status:** Research proof of concept; frozen model inference; not a production-ready agricultural diagnostic product.
 
-The annotated output is a modification of the source image produced by the frozen YOLO model.
+No blanket open-source license is asserted here. The project team must confirm which original code, model weights, and sample data it has authority to license before adding a repository-wide `LICENSE` file.
 
-CC BY 4.0 license information:
+---
 
-https://creativecommons.org/licenses/by/4.0/
-
-### Other research data
-
-The broader ConvNeXt-Tiny classifier was developed using multiple agricultural image domains. The complete training datasets and experiment archive are **not** redistributed in this repository.
-
-The demonstration sample must not be used as evidence of classifier or detector generalization.
-
-## 7. Research evidence and limitations
-
-### Frozen YOLO11n detection evaluation
-
-The frozen YOLO release documentation reports the following metrics on its reserved test set:
-
-| Metric | Reported value |
-|---|---:|
-| Precision | 0.893 |
-| Recall | 0.856 |
-| mAP@50 | 0.925 |
-| mAP@50–95 | 0.836 |
-| Test images | 1,516 |
-| Test instances | 5,282 |
-
-The complete release metrics are recorded in `results/YOLO_FINAL_METRICS.txt`.
-
-These are previously obtained frozen detector test results. They are **not** reproduced by the single-image notebook demonstration.
-
-The detector's validation metrics were lower than its final test metrics; performance differences across evaluation splits should be interpreted cautiously.
-
-### Classifier evaluation context
-
-Historical evaluation of the broader PlantDiseaseAI research system includes:
-
-| Evaluation | Reported accuracy |
-|---|---:|
-| Internal multi-domain test | 98.09% |
-| Supplementary tomato external audit | 71.20% |
-| Held-out lettuce evaluation | 91.15% |
-| Separate 70-image field-style stress test | 31.43% |
-
-These results correspond to different datasets and evaluation conditions. They must not be treated as interchangeable measures of real-world performance.
-
-In particular, the high internal test accuracy should **not** be presented as expected field accuracy. The supplementary tomato external audit was influenced by earlier domain adaptation and is not a perfectly untouched final evaluation.
-
-The field-style stress test highlights the continuing difficulty of agricultural domain shift.
-
-### Reliability-aware prediction
-
-The classifier applies frozen crop-specific calibration and selective-prediction criteria.
-
-An ACCEPT result indicates that the prediction satisfies the defined reliability thresholds. It is **not** a guarantee of diagnostic correctness.
-
-VERIFY indicates that additional review is appropriate. Thresholds are not tuned using the final test data in this demonstration.
-
-### Explainability
-
-The broader system supports Grad-CAM++ as a qualitative attention aid. Attention maps are not ground-truth lesion masks and should not be interpreted as proof that a diagnosis is correct.
-
-Grad-CAM++ visualization is not required to reproduce the notebook's principal inference demonstration.
-
-### Scope limitations
-
-- The demonstration does not retrain or fine-tune either model.
-- The demonstration does not independently recalculate reported test metrics.
-- The user must manually provide crop identity.
-- YOLO supports tomato categories only.
-- ConvNeXt and YOLO operate independently.
-- The detector's bounding boxes are predictions, not verified disease regions.
-- Real-world lighting, background, crop variety, acquisition conditions, and domain shift may substantially affect performance.
-- The greenhouse environmental-context subsystem is not executed in this notebook.
-- The prototype is not an autonomous disease diagnosis or treatment recommendation system.
-
-## 8. Reproducibility verification
-
-The following checks were completed on October 8, 2026:
-
-| Check | Result |
-|---|---|
-| Public GitHub clone | Passed |
-| Automatic classifier checkpoint download | Passed |
-| Classifier SHA-256 verification | Passed |
-| YOLO SHA-256 verification | Passed |
-| Fresh-clone notebook execution | Passed |
-| New Python 3.10 environment creation | Passed |
-| Clean dependency installation | Passed |
-| Dependency integrity check (`pip check`) | Passed |
-| CPU-only PyTorch inference | Passed |
-| ConvNeXt classification and reliability gate | Passed |
-| YOLO11n inference and annotation | Passed |
-| JSON and annotated image generation | Passed |
-
-These checks establish that the demonstration executed successfully in the tested Windows CPU environment. They do not establish universal compatibility across all operating systems or hardware configurations.
-
-## 9. Team and contributions
-
-**Project:** PlantDiseaseAI — Reliability-Aware Plant Disease Recognition
-
-**Team members and roles:**
-
-- **Sarah Assaad — Lead AI Researcher & Machine Learning Architect** —  Led the end-to-end AI development, including multi-domain deep learning, model optimization, robustness evaluation, reliability-aware prediction, explainable AI, YOLO integration, and reproducible deployment
-- **Pr.Mohamad Khalil  — Professor, Lebanese University; Director, AZM Research Center for Biotechnology** — Academic and biotechnology expertise, affiliated with the École Doctorale des Sciences et Technologies and Université de Technologie de Compiègne.
-- **Dr. Fatima Yahya  — PhD, Senior Researcher in Chemistry and Environmental Science, Lebanese University** — Scientific expertise in chemistry, environmental research, and greenhouse-related applications.
-
-## 10. Code, model, and data licensing
-
-The demonstration image's source metadata identifies the Roboflow dataset license as **CC BY 4.0**, as described in Section 6.
-
-This attribution does not automatically establish that all repository source code, pretrained model components, trained checkpoint weights, or other research datasets share the same license.
-
-Repository-wide licensing and any third-party notices should be reviewed before adding a general software license.
-
-No license for the complete repository is asserted solely on the basis of the demonstration image's CC BY 4.0 metadata.
-
-## 11. Frozen checkpoint release
-
-The frozen ConvNeXt-Tiny classifier checkpoint is distributed separately to keep the Git repository lightweight.
-
-[Download or inspect the frozen classifier release — v1.0.0-hackathon](https://github.com/sarahassaad140/PlantDiseaseAI-Hackathon/releases/tag/v1.0.0-hackathon)
-
-The `download_checkpoint.py` script automates retrieval and integrity verification.
-
-## 12. Responsible use
-
-PlantDiseaseAI is a research proof of concept intended to support human agricultural decision-making.
-
-Its predictions, confidence scores, reliability decisions, and detection overlays must be interpreted in context. The system is not a substitute for expert diagnosis, laboratory testing, or appropriate crop-management procedures.
-
-Do not commit private data, unapproved imagery, credentials, or the original large experiment archive to this repository.
+**Key message:** PlantDiseaseAI demonstrates reliability-aware visual decision support under agricultural domain shift. It does not claim to solve domain shift, replace agronomists, or automate greenhouse management.
